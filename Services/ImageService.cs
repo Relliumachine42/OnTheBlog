@@ -6,10 +6,10 @@ namespace OnTheBlog.Services
     public class ImageService : IImageService
     {
 
-        private readonly string? _defaultBlogImage = "/img/believingintensifies.jpg";
+        private readonly string? _defaultBlogImage = "/img/InTheBloglightLogo.png";
         private readonly string? _defaultUserImage = "/img/DefaultContactImage.png";
         private readonly string? _defaultCategoryImage = "/img/DefaultContactImage.png";
-        private readonly string? _blogAuthorImage = "/img/DefaultContactImage.png";
+        private readonly string? _blogAuthorImage = "/img/InTheBloglightLogo.png";
 
 
 
