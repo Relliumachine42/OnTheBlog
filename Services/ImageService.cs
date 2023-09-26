@@ -9,7 +9,7 @@ namespace OnTheBlog.Services
         private readonly string? _defaultBlogImage = "/img/InTheBloglightLogo.png";
         private readonly string? _defaultUserImage = "/img/DefaultContactImage.png";
         private readonly string? _defaultCategoryImage = "/img/DefaultContactImage.png";
-        private readonly string? _blogAuthorImage = "/img/InTheBloglightLogo.png";
+        private readonly string? _blogAuthorImage = "/img/headshot.png";
 
 
 
