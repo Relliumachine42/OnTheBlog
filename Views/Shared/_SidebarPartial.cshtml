@@ -1,49 +1,27 @@
-﻿<div class="col-lg-4 col-xl-4 mt_md--40 mt_sm--40">
+﻿@using X.PagedList.Web.Common;
+@model IPagedList<OnTheBlog.Models.BlogPost>
+@inject IBlogService _blogService
+@inject IImageService _imageService
+
+<div class="col-lg-4 col-xl-4 mt_md--40 mt_sm--40">
     <div class="sidebar-inner">
 
         <!-- Start Single Widget  -->
         <div class="axil-single-widget widget widget_categories mb--30">
             <ul>
+                @foreach (Category category in await _blogService.GetCategoriesAsync())
+                {                  
                 <li class="cat-item">
-                    <a href="#" class="inner">
+                    <a asp-action="CategoryFilter" asp-controller="BlogPosts" asp-route-category="@category.Name" class="inner">
                         <div class="thumbnail">
-                            <img src="assets/images/post-images/category-image-01.jpg" alt="">
+                                <img src="@_imageService.ConvertByteArrayToFile(category.ImageData, category.ImageType, DefaultImage.CategoryImage)" alt="">
                         </div>
                         <div class="content">
-                            <h5 class="title">Tech</h5>
+                            <h5 class="title">@category.Name</h5>
                         </div>
                     </a>
                 </li>
-                <li class="cat-item">
-                    <a href="#" class="inner">
-                        <div class="thumbnail">
-                            <img src="assets/images/post-images/category-image-02.jpg" alt="">
-                        </div>
-                        <div class="content">
-                            <h5 class="title">Style</h5>
-                        </div>
-                    </a>
-                </li>
-                <li class="cat-item">
-                    <a href="#" class="inner">
-                        <div class="thumbnail">
-                            <img src="assets/images/post-images/category-image-03.jpg" alt="">
-                        </div>
-                        <div class="content">
-                            <h5 class="title">Travel</h5>
-                        </div>
-                    </a>
-                </li>
-                <li class="cat-item">
-                    <a href="#" class="inner">
-                        <div class="thumbnail">
-                            <img src="assets/images/post-images/category-image-04.jpg" alt="">
-                        </div>
-                        <div class="content">
-                            <h5 class="title">Food</h5>
-                        </div>
-                    </a>
-                </li>
+                }
             </ul>
         </div>
         <!-- End Single Widget  -->
@@ -60,76 +38,34 @@
         <!-- End Single Widget  -->
         <!-- Start Single Widget  -->
         <div class="axil-single-widget widget widget_postlist mb--30">
-            <h5 class="widget-title">Popular on Blogar</h5>
+            <h5 class="widget-title">Popular Posts</h5>
             <!-- Start Post List  -->
             <div class="post-medium-block">
-
+                @foreach (BlogPost blogPost in await (_blogService.GetPopularBlogPostsAsync(3)))
+                {                  
                 <!-- Start Single Post  -->
                 <div class="content-block post-medium mb--20">
                     <div class="post-thumbnail">
-                        <a href="post-details.html">
-                            <img src="assets/images/small-images/blog-sm-01.jpg" alt="Post Images">
+                        <a asp-controller="BlogPosts" asp-action="Details" asp-route-slug="@blogPost?.Slug">
+                                <img src="@_imageService.ConvertByteArrayToFile(blogPost.ImageData, blogPost.ImageType, DefaultImage.BlogPostImage)" alt="Post Images">
                         </a>
                     </div>
                     <div class="post-content">
                         <h6 class="title">
-                            <a href="post-details.html">
-                                The underrated design book that transformed the way I
-                                work
+                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost?.Slug">
+                                @blogPost?.Title
                             </a>
                         </h6>
                         <div class="post-meta">
                             <ul class="post-meta-list">
-                                <li>Feb 17, 2019</li>
-                                <li>300k Views</li>
+                                <li>@blogPost?.Created.ToString("MMM dd, yyyy")</li>
+                                <li>@blogPost?.Comments.Count <span>Comments</span></li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <!-- End Single Post  -->
-                <!-- Start Single Post  -->
-                <div class="content-block post-medium mb--20">
-                    <div class="post-thumbnail">
-                        <a href="post-details.html">
-                            <img src="assets/images/small-images/blog-sm-02.jpg" alt="Post Images">
-                        </a>
-                    </div>
-                    <div class="post-content">
-                        <h6 class="title">
-                            <a href="post-details.html">Here’s what you should (and shouldn’t) do when</a>
-                        </h6>
-                        <div class="post-meta">
-                            <ul class="post-meta-list">
-                                <li>Feb 17, 2019</li>
-                                <li>300k Views</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Single Post  -->
-                <!-- Start Single Post  -->
-                <div class="content-block post-medium mb--20">
-                    <div class="post-thumbnail">
-                        <a href="post-details.html">
-                            <img src="assets/images/small-images/blog-sm-03.jpg" alt="Post Images">
-                        </a>
-                    </div>
-                    <div class="post-content">
-                        <h6 class="title">
-                            <a href="post-details.html">
-                                How a developer and designer duo at Deutsche Bank keep
-                                remote
-                            </a>
-                        </h6>
-                        <div class="post-meta">
-                            <ul class="post-meta-list">
-                                <li>Feb 17, 2019</li>
-                                <li>300k Views</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Single Post  -->
+                }
 
             </div>
             <!-- End Post List  -->
@@ -137,7 +73,7 @@
         </div>
         <!-- End Single Widget  -->
         <!-- Start Single Widget  -->
-        <div class="axil-single-widget widget widget_social mb--30">
+@*         <div class="axil-single-widget widget widget_social mb--30">
             <h5 class="widget-title">Stay In Touch</h5>
             <!-- Start Post List  -->
             <ul class="social-icon md-size justify-content-center">
@@ -148,7 +84,7 @@
                 <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
             </ul>
             <!-- End Post List  -->
-        </div>
+        </div> *@
         <!-- End Single Widget  -->
        
     </div>

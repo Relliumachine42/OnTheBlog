@@ -291,6 +291,73 @@ namespace OnTheBlog.Services
             }
 
         }
+        public async Task<IEnumerable<BlogPost>> GetBlogPostsByTagAsync(string? tag)
+        {
+            try
+            {
+                IEnumerable<BlogPost> blogPosts = new List<BlogPost>();
+
+                if (string.IsNullOrEmpty(tag))
+                {
+                    return blogPosts;
+                }
+                else
+                {
+
+                    blogPosts = await _context.BlogPosts
+                      .Include(b => b.Category)
+                      .Include(b => b.Tags)
+                      .Include(b => b.Comments)
+                          .ThenInclude(c => c.Author)
+                    .Where(b => b.Tags.Any(t => t.Name == tag))
+                      .Where(b => b.IsPublished == true && b.IsDeleted == false)
+                      .AsNoTracking()
+                      .OrderByDescending(b => b.Created)
+                      .ToListAsync();
+
+                    return blogPosts;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<BlogPost> GetBlogPostsByCategory(string? category)
+        {
+            try
+            {
+                IEnumerable<BlogPost> blogPosts = new List<BlogPost>();
+
+                if (string.IsNullOrEmpty(category))
+                {
+                    return blogPosts;
+                }
+                else
+                {
+
+                    blogPosts = _context.BlogPosts
+                        .Include(b => b.Category)
+                        .Include(b => b.Tags)
+                        .Include(b => b.Comments)
+                            .ThenInclude(c => c.Author)
+                        .Where(b => b.IsPublished == true && b.IsDeleted == false)
+                        .Where(b => b.Category!.Name == category)
+                        .AsNoTracking()
+                        .OrderByDescending(b => b.Created)
+                        .AsEnumerable();
+
+                    return blogPosts;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public async Task UpdateBlogPostAsync(BlogPost? blogPost)
         {

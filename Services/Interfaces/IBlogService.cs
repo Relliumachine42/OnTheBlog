@@ -23,7 +23,7 @@ namespace OnTheBlog.Services.Interfaces
         public Task RemoveAllBlogPostTagsAsync(int? blogPostId);
         public IEnumerable<BlogPost> SearchBlogPosts(string? searchString);
         public Task<bool> ValidSlugAsync(string? title, int? blogPostId);
-
-        //public Task<IEnumerable<BlogPost>> GetBlogPostsByCategory(int? categoryId);
+        public Task<IEnumerable<BlogPost>> GetBlogPostsByTagAsync(string? tag);
+        public IEnumerable<BlogPost> GetBlogPostsByCategory(string? category);
     }
 }

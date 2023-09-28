@@ -36,28 +36,28 @@
                                         <!-- Post Meta  -->
                                         <div class="post-meta-wrapper">
                                             <div class="post-meta">
-                                                <div class="post-author-avatar border-rounded">
+@*                                                 <div class="post-author-avatar border-rounded">
                                                     <img src="" alt="Author Images" style="height:80px;width:80px">
-                                                </div>
+                                                </div> *@
                                                 <div class="content">
                                                     <h6 class="post-author-name">
                                                         <a class="hover-flip-item-wrapper" href="author.html">
                                                             <span class="hover-flip-item">
-                                                                <span data-text="[Name]"></span>
+                                                                <span data-text="Glenn Schwartz"></span>
                                                             </span>
                                                         </a>
                                                     </h6>
                                                     <ul class="post-meta-list">
                                                         <li>@Model.Created.ToString("MMM dd, yyyy")</li>
-                                                        <li>@Model.Comments.Count</li>
+                                                        <li>Comments: @Model.Comments.Count</li>
                                                     </ul>
                                                 </div>
                                             </div>
                                             <ul class="social-share-transparent justify-content-end">
-                                                <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                                <li><a href="#"><i class="fas fa-link"></i></a></li>
+                                                <li><a href="https://github.com/Relliumachine42"><i class="fab fa-github"></i></a></li>
+                                                <li><a href="mailto:glennschwartz42@gmail.com"><i class="far fa-envelope"></i></a></li>
+                                                <li><a href="https://www.linkedin.com/in/glenn-schwartz/"><i class="fab fa-linkedin-in"></i></a></li>
+                                                <li><a href="https://schwartz-portfolio.netlify.app/"><i class="fas fa-link"></i></a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -94,10 +94,10 @@
                             </a>
                         </div>
                         <ul class="social-icon icon-rounded-transparent md-size">
-                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="https://github.com/Relliumachine42"><i class="fab fa-github"></i></a></li>
+                            <li><a href="mailto:glennschwartz42@gmail.com"><i class="far fa-envelope"></i></a></li>
+                            <li><a href="https://www.linkedin.com/in/glenn-schwartz/"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="https://schwartz-portfolio.netlify.app/"><i class="fas fa-link"></i></a></li>
                         </ul>
                     </div>
                     <!-- Start Author  -->
@@ -143,7 +143,7 @@
                         <!-- End Comment Respond  -->
                         <!-- Start Comment Area  -->
                         <div class="axil-comment-area">
-                            <h4 class="title">0 Comments</h4>
+                            <h4 class="title">@Model.Comments.Count Comments</h4>
                             <ul class="comment-list">
 
                                 @foreach (Comment comment in Model.Comments)
@@ -153,7 +153,7 @@
                                         <div class="comment-body">
                                             <div class="single-comment">
                                                 <div class="comment-img">
-                                                    <img src="" alt="Author Images" style="height:40px;width:40px">
+                                                    <img src="@_ImageService.ConvertByteArrayToFile(comment.Author?.ImageData,comment.Author?.ImageType,DefaultImage.AuthorImage)" alt="Author Images" style="height:40px;width:40px">
                                                 </div>
                                                 <div class="comment-inner">
                                                     <h6 class="commenter">

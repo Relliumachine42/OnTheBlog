@@ -1137,6 +1137,10 @@ font-family: 'Red Hat Display', sans-serif;
   background-image: url(../images/bg/bg-image-4.jpg);
 }
 
+.bg_contact {
+    background-image: url(~/img/background.jpg);
+}
+
 /* Height and width */
 .fullscreen {
   min-height: 100vh;

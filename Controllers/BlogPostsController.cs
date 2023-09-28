@@ -66,6 +66,31 @@ namespace OnTheBlog.Controllers
 
             return View(nameof(Index), blogPosts);
         }
+
+        public async Task<IActionResult> CategoryFilter(string? category, int? pageNum)
+        {
+            int pageSize = 3;
+            int page = pageNum ?? 1;
+
+            IPagedList<BlogPost> blogPosts = await _blogService.GetBlogPostsByCategory(category).ToPagedListAsync(page, pageSize);
+
+            ViewData["ActionName"] = nameof(CategoryFilter);
+            ViewData["CategoryString"] = category;
+
+            return View(nameof(Index), blogPosts);
+        }
+        public async Task<IActionResult> TagFilter(string? tag, int? pageNum)
+        {
+            int pageSize = 3;
+            int page = pageNum ?? 1;
+
+            IPagedList<BlogPost> blogPosts = await (await _blogService.GetBlogPostsByTagAsync(tag)).ToPagedListAsync(page, pageSize);
+
+            ViewData["ActionName"] = nameof(TagFilter);
+            ViewData["TagString"] = tag;
+
+            return View(nameof(Index), blogPosts);
+        }
         public async Task<IActionResult> Popular(int? pageNum)
         {
             if (_context.BlogPosts == null)
