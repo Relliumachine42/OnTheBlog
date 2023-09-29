@@ -138,6 +138,7 @@ namespace OnTheBlog.Controllers
         // POST: BlogPosts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Abstract,Content,IsPublished,CategoryId,ImageFile")] BlogPost blogPost, string? stringTags)
@@ -205,7 +206,7 @@ namespace OnTheBlog.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Abstract,Content,Created,Slug,IsPublished,IsDeleted,ImageData,ImageType,CategoryId,ImageFile")] BlogPost blogPost)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Abstract,Content,Created,Slug,IsPublished,IsDeleted,ImageData,ImageType,CategoryId,ImageFile")] BlogPost blogPost, string? stringTags)
         {
             if (id != blogPost.Id)
             {
@@ -216,7 +217,25 @@ namespace OnTheBlog.Controllers
             {
                 try
                 {
+                    string? newSlug = StringHelper.BlogPostSlug(blogPost.Title);
+
+                    if (newSlug != blogPost.Slug)
+                    {
+
+                        if (!await _blogService.ValidSlugAsync(newSlug, blogPost.Id))
+                        {
+                            ModelState.AddModelError("Title", "A similar Title/Slug is already in use.");
+
+                            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
+                            return View(blogPost);
+                        }
+
+                        blogPost.Slug = newSlug;
+
+                    }
+
                     blogPost.Created = DateTime.Now;
+
                     if (blogPost.ImageFile != null)
                     {
                         blogPost.ImageData = await _imageService.ConvertFileToByteArrayAsync(blogPost.ImageFile);
@@ -225,6 +244,11 @@ namespace OnTheBlog.Controllers
 
                     await _blogService.UpdateBlogPostAsync(blogPost);
 
+                    if (string.IsNullOrEmpty(stringTags) == false)
+                    {
+                        IEnumerable<string> tags = stringTags.Split(',');
+                        await _blogService.AddTagsToBlogPostAsync(tags, blogPost.Id);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -304,7 +328,7 @@ namespace OnTheBlog.Controllers
 
             BlogPost? blogPost = await _blogService.GetBlogPostAsync(id);
 
-            if (blogPost == null) 
+            if (blogPost == null)
             {
                 return NotFound();
             }
@@ -313,7 +337,7 @@ namespace OnTheBlog.Controllers
 
             await _blogService.UpdateBlogPostAsync(blogPost);
 
-            return RedirectToAction(nameof(AuthorArea));
+            return RedirectToAction(nameof(AuthorArea));   
 
         }
 

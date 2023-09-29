@@ -1,6 +1,6 @@
 ﻿@model OnTheBlog.Models.BlogPost
-@inject IImageService _ImageService
-@inject IBlogService _BlogService
+@inject IImageService _imageService
+@inject IBlogService _blogService
 
 @{
     ViewData["Title"] = "Create";
@@ -34,7 +34,7 @@
                 <div class="col-12 col-lg-4">
                     <div class="form-group">
                         <label asp-for="ImageFile" class="control-label">Blog Post Image</label>
-                        <img class="img-fluid border rounded-3 mb-2" style="max-height: 350px;" src="@_ImageService.ConvertByteArrayToFile(Model?.ImageData!,Model?.ImageType!,DefaultImage.BlogPostImage)" id="blogImage">
+                        <img class="img-fluid border rounded-3 mb-2" style="max-height: 350px;" src="@_imageService.ConvertByteArrayToFile(Model?.ImageData!,Model?.ImageType!,DefaultImage.BlogPostImage)" id="blogImage">
                         <input asp-for="ImageFile" type="file" class="form-control mt-3 pt-2" accept=".png,.jpg,.jpeg,.gif"
                                onchange="document.getElementById('blogImage').src = window.URL.createObjectURL(this.files[0])" />
                     </div>
@@ -66,7 +66,7 @@
 
                         <div class="tagcloud axil-single-widget mt-2" style="display: none;">
                             <!-- tags go here -->
-                            @foreach (Tag tag in await _BlogService.GetTagsAsync())
+                            @foreach (Tag tag in await _blogService.GetTagsAsync())
                             {
                                 <a role="button">@tag.Name</a>
                             }
@@ -84,7 +84,7 @@
             </div>
         </form>
         <div class="form-group mt-5 start-0">
-            <a asp-action="Index">Back</a>
+            <a asp-controller="BlogPosts" asp-action="AuthorArea">Back</a>
         </div>
     </main>
 </div>
