@@ -71,6 +71,8 @@ namespace OnTheBlog.Models
         public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
         [JsonIgnore]
         public virtual ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
+        [JsonIgnore]
+        public virtual ICollection<BlogLike> Likes { get; set; } = new HashSet<BlogLike>();
 
     }
 }

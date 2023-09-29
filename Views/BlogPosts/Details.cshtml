@@ -1,6 +1,8 @@
-﻿@model BlogPost
+﻿@using Microsoft.AspNetCore.Identity;
+@model BlogPost
 @inject IImageService _ImageService
 @inject IBlogService _BlogService
+@inject UserManager<BlogUser> _userManager
 @{
     ViewData["ShowCode"] = true;
 }
@@ -90,12 +92,15 @@
                         }
                     </div>
                     <div class="social-share-block">
+                        @if (User.Identity!.IsAuthenticated)
+                        {
                         <div class="post-like">
                             <a id="likesButton">
                                 <i id="faThumb" class="fal fa-thumbs-up" style="background-color:#ff993b;color:white;border-color:white"></i>
-                                <span id="numLikes">0 Likes</span>
+                                <span id="numLikes">@Model.Likes.Where(bl => bl.IsLiked == true).Count() Likes</span>
                             </a>
                         </div>
+                        }
                         <ul class="social-icon icon-rounded-transparent md-size">
                             <li><a href="https://github.com/Relliumachine42"><i class="fab fa-github"></i></a></li>
                             <li><a href="mailto:glennschwartz42@gmail.com"><i class="far fa-envelope"></i></a></li>
@@ -163,6 +168,11 @@
 
                                                             <span class="">
                                                                 <span data-text="@comment.Author?.FullName">@comment.Author?.FullName</span>
+                                                            @if(User.IsInRole("Admin"))
+                                                            {
+                                                                <a class="btn btn-sm btn-outline-danger"
+                                                                   asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.Id">Delete</a>
+                                                            }
                                                             </span>
                                                   
                                                     </h6>
@@ -208,5 +218,46 @@
             .then(editor => {
                 window.editor = editor;
             });;
+    </script>
+    <script type="text/javascript">
+        @{
+            string? userId = _userManager.GetUserId(User);
+        }
+            let userId = '@userId';
+        $().ready(function () {
+            $('#likesButton').click(function () {
+
+                    let args = {
+                        blogPostId: @Model.Id,
+                        blogUserId: userId
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("LikeBlogPost","BlogPosts")',
+                        data: args,
+                        success: function (result) {
+                            let data = result.isLiked;
+                            let likes = result.count;
+
+                            if (data == true) {
+                                $("#faThumb").css({ "background-color": "red", "color": "white", "border-color": "white" });
+                            } else {
+                                $("#faThumb").css({ "background-color": "", "color": "", "border-color": "" });
+                            }
+
+                            $('#numLikes').html(likes + ' Likes');
+                        },
+                        failure: function (result) {
+                            alert(result.d);
+                        },
+                        error: function (result) {
+                            alert(result.d);
+                        }
+                    });
+                
+            });
+        });
+
     </script>
 }

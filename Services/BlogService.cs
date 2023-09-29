@@ -429,6 +429,20 @@ namespace OnTheBlog.Services
                 throw;
             }
         }
+        public async Task<bool> UserLikedBlogAsync(int blogPostId, string blogUserId)
+        {
+            try
+            {
+                return await _context.BlogLikes
+                                    .AnyAsync(bl => bl.BlogPostId == blogPostId && bl.IsLiked == true && bl.BlogUserId == blogUserId);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
         #region MyRegion
         public async Task<bool> ValidSlugAsync(string? title, int? blogPostId)

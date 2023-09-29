@@ -26,5 +26,6 @@ namespace OnTheBlog.Services.Interfaces
         public Task<bool> ValidSlugAsync(string? title, int? blogPostId);
         public Task<IEnumerable<BlogPost>> GetBlogPostsByTagAsync(string? tag);
         public IEnumerable<BlogPost> GetBlogPostsByCategory(string? category);
+        public Task<bool> UserLikedBlogAsync(int blogPostId, string blogUserId);
     }
 }

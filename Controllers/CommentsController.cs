@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnTheBlog.Data;
 using OnTheBlog.Models;
+using OnTheBlog.Services;
 using OnTheBlog.Services.Interfaces;
 
 namespace OnTheBlog.Controllers
@@ -25,7 +26,6 @@ namespace OnTheBlog.Controllers
         {
             _context = context;
             _userManager = userManager;
-
         }
 
         // GET: Comments
@@ -178,13 +178,33 @@ namespace OnTheBlog.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Comments'  is null.");
             }
             var comment = await _context.Comments.FindAsync(id);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            BlogPost? blogPost = await _context.BlogPosts
+                                            .Where(b => b.Id == comment.BlogPostId)
+                                            .FirstOrDefaultAsync();
+
+            if (blogPost == null)
+            {
+                return NotFound();
+            }
+
+            string? slug = blogPost.Slug;
+
             if (comment != null)
             {
                 _context.Comments.Remove(comment);
             }
-
+            
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return RedirectToAction("Details", "BlogPosts", new { slug });
+
+
         }
 
         private bool CommentExists(int id)
