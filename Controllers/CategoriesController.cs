@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnTheBlog.Data;
 using OnTheBlog.Models;
+using OnTheBlog.Services.Interfaces;
 
 namespace OnTheBlog.Controllers
 {
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IImageService _imageService;
 
-        public CategoriesController(ApplicationDbContext context)
+        public CategoriesController(ApplicationDbContext context, IImageService imageService)
         {
             _context = context;
+            _imageService = imageService;
         }
 
         // GET: Categories
@@ -56,10 +59,15 @@ namespace OnTheBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageData,ImageType")] Category category)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageFile")] Category category)
         {
             if (ModelState.IsValid)
             {
+                if (category.ImageFile != null)
+                {
+                    category.ImageData = await _imageService.ConvertFileToByteArrayAsync(category.ImageFile);
+                    category.ImageType = category.ImageFile.ContentType;
+                }
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -88,7 +96,7 @@ namespace OnTheBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ImageData,ImageType")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ImageData,ImageType,ImageFile")] Category category)
         {
             if (id != category.Id)
             {
@@ -99,6 +107,12 @@ namespace OnTheBlog.Controllers
             {
                 try
                 {
+                    if (category.ImageFile != null)
+                    {
+                        category.ImageData = await _imageService.ConvertFileToByteArrayAsync(category.ImageFile);
+                        category.ImageType = category.ImageFile.ContentType;
+                    }
+
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
