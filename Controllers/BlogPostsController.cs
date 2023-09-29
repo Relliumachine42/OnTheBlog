@@ -35,7 +35,9 @@ namespace OnTheBlog.Controllers
             int pageSize = 3;
             int page = pageNum ?? 1;
 
-            IPagedList<BlogPost> blogPosts = await (await _blogService.GetAllBlogPostsAsync()).ToPagedListAsync(page, pageSize);
+            IPagedList<BlogPost> blogPosts = await (await _blogService.GetAllBlogPostsAsync())
+                                                                        .Where(b => b.IsPublished == true && b.IsDeleted == false)
+                                                                        .ToPagedListAsync(page, pageSize);
 
             return View(blogPosts);
         }
@@ -78,6 +80,19 @@ namespace OnTheBlog.Controllers
             ViewData["CategoryString"] = category;
 
             return View(nameof(Index), blogPosts);
+        }
+
+        public async Task<IActionResult> BlogFilter(string? filter, int? pageNum)
+        {
+            int pageSize = 3;
+            int page = pageNum ?? 1;
+
+            IPagedList<BlogPost> blogPosts = await _blogService.GetBlogPostsByFilter(filter).ToPagedListAsync(page, pageSize);
+
+            ViewData["ActionName"] = nameof(BlogFilter);
+            ViewData["CategoryString"] = filter;
+
+            return View(nameof(AuthorArea), blogPosts);
         }
         public async Task<IActionResult> TagFilter(string? tag, int? pageNum)
         {

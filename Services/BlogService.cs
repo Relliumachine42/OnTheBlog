@@ -108,7 +108,7 @@ namespace OnTheBlog.Services
 
                 throw;
             }
-        } 
+        }
         #endregion
 
         public async Task<IEnumerable<BlogPost>> GetBlogPostsAsync()
@@ -121,7 +121,7 @@ namespace OnTheBlog.Services
                                                                     .Include(b => b.Comments)
                                                                         .ThenInclude(c => c.Author)
                                                                     .Include(b => b.Tags)
-                                                                    .ToListAsync(); 
+                                                                    .ToListAsync();
                 return blogPosts;
             }
             catch (Exception)
@@ -281,7 +281,7 @@ namespace OnTheBlog.Services
                                                     .OrderByDescending(b => b.Created)
                                                     .AsEnumerable();
                     return blogPosts;
-                                                        
+
                 }
             }
             catch (Exception)
@@ -359,6 +359,62 @@ namespace OnTheBlog.Services
             }
         }
 
+        public IEnumerable<BlogPost> GetBlogPostsByFilter(string? filter)
+        {
+            try
+            {
+                IEnumerable<BlogPost> blogPosts = new List<BlogPost>();
+
+                if (filter == "Drafts")
+                {
+                    blogPosts = _context.BlogPosts
+                        .Include(b => b.Category)
+                        .Include(b => b.Tags)
+                        .Include(b => b.Comments)
+                            .ThenInclude(c => c.Author)
+                        .Where(b => b.IsPublished == false && b.IsDeleted == false)
+                        .AsNoTracking()
+                        .OrderByDescending(b => b.Created)
+                        .AsEnumerable();
+
+                    return blogPosts;
+                }
+                else if (filter == "Deleted")
+                {
+                    blogPosts = _context.BlogPosts
+                        .Include(b => b.Category)
+                        .Include(b => b.Tags)
+                        .Include(b => b.Comments)
+                            .ThenInclude(c => c.Author)
+                        .Where(b => b.IsDeleted == true)
+                        .AsNoTracking()
+                        .OrderByDescending(b => b.Created)
+                        .AsEnumerable();
+
+                    return blogPosts;
+                }
+                else
+                {
+                    blogPosts = _context.BlogPosts
+                            .Include(b => b.Category)
+                            .Include(b => b.Tags)
+                            .Include(b => b.Comments)
+                                .ThenInclude(c => c.Author)
+                            .Where(b => b.IsPublished == true && b.IsDeleted == false)
+                            .AsNoTracking()
+                            .OrderByDescending(b => b.Created)
+                            .AsEnumerable();
+                    return blogPosts;
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public async Task UpdateBlogPostAsync(BlogPost? blogPost)
         {
             if (blogPost == null) { return; }
@@ -404,7 +460,7 @@ namespace OnTheBlog.Services
 
                 throw;
             }
-        } 
+        }
         #endregion
     }
 }

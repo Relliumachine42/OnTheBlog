@@ -14,6 +14,7 @@ namespace OnTheBlog.Services.Interfaces
 
         public Task<IEnumerable<BlogPost>> GetAllBlogPostsAsync();
 
+        public IEnumerable<BlogPost> GetBlogPostsByFilter(string? filter);
 
         public Task<IEnumerable<Category>> GetCategoriesAsync();
         public Task<IEnumerable<BlogPost>> GetPopularBlogPostsAsync(int? count = null);

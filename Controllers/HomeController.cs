@@ -51,6 +51,7 @@ namespace OnTheBlog.Controllers
 
             return View(blogUser);
         }
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ContactMe([Bind("FirstName,LastName,Email")] BlogUser blogUser, string? message)

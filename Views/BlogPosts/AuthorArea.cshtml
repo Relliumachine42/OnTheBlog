@@ -1,12 +1,55 @@
 ﻿@using X.PagedList.Web.Common;
 @model IPagedList<BlogPost>
 @inject IImageService _ImageService
+@{
+    ViewData["Title"] = "AuthorArea";
+    string? actionName = ViewBag.ActionName;
+    string? filter = "";
+    string pageTitle = "";
 
+    switch (actionName)
+    {
+        case "AuthorArea":
+            pageTitle = "My Blogs";
+            filter = "";
+            break;
+        case "Drafts":
+            pageTitle = "My Drafts";
+            filter = "Drafts";
+            break;
+        case "Deleted":
+            pageTitle = "My Archive";
+            filter = "Deleted";
+            break;
+    }
+}
 
 <!-- Start Post List Wrapper  -->
 <div class="axil-post-list-area axil-section-gap bg-color-white">
     <div class="container">
-        <a class="axil-button button-rounded btn-primary mb-5" asp-action="Create" asp-controller="BlogPosts">New Blog Post</a>
+        <div class="d-flex">
+            <a class="mx-3 axil-button button-rounded btn btn-success mb-5" asp-action="Create" asp-controller="BlogPosts">New Blog Post</a>
+            @if (ViewBag.CategoryString == "Drafts")
+            {
+                <a class="mx-3 axil-button button-rounded btn btn-success mb-5" asp-action="AuthorArea" asp-controller="BlogPosts">Author Area</a>
+                <a class="mx-3 axil-button button-rounded btn btn-success mb-5" asp-action="BlogFilter" asp-controller="BlogPosts" asp-route-filter="Deleted">Deleted</a>
+
+            }
+            else if (ViewBag.CategoryString == "Deleted")
+            {
+                <a class="mx-3 axil-button button-rounded btn btn-success mb-5" asp-action="AuthorArea" asp-controller="BlogPosts">Author Area</a>
+                <a class="mx-3 axil-button button-rounded btn btn-success mb-5" asp-action="BlogFilter" asp-controller="BlogPosts" asp-route-filter="Drafts">Drafts</a>
+
+            }
+            else
+            {
+                <a class="mx-3 axil-button button-rounded btn btn-success mb-5" asp-action="BlogFilter" asp-controller="BlogPosts" asp-route-filter="Drafts">Drafts</a>
+                <a class="mx-3 axil-button button-rounded btn btn-success mb-5" asp-action="BlogFilter" asp-controller="BlogPosts" asp-route-filter="Deleted">Deleted</a>
+
+            }
+        </div>
+
+
         <!-- Start Post List  -->
         @* BEGIN: show this for each post *@
         @foreach (BlogPost blogPost in Model)
@@ -65,9 +108,7 @@
                             @if (blogPost.IsPublished == false)
                             {
                                 <a class="w-75 btn btn-outline-success"
-                                asp-action="Publish" asp-controller="BlogPosts" asp-route-id="@blogPost.Id"
-                                
-                                >Publish</a>
+                                   asp-action="Publish" asp-controller="BlogPosts" asp-route-id="@blogPost.Id">Publish</a>
                             }
                             else
                             {
@@ -88,7 +129,7 @@
                             else
                             {
                                 <a class="w-75 btn btn-outline-danger"
-                                  asp-action="Undelete" asp-controller="BlogPosts" asp-route-id="@blogPost.Id">Undelete</a>
+                                   asp-action="Undelete" asp-controller="BlogPosts" asp-route-id="@blogPost.Id">Undelete</a>
                             }
 
                         </div>
@@ -105,7 +146,7 @@
             <div>
                 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
             </div>
-            @Html.PagedListPager(Model, pageNum => Url.Action("AuthorArea", new { pageNum }),
+            @Html.PagedListPager(Model, pageNum => Url.Action(actionName, new { pageNum, filter}),
             new PagedListRenderOptions
             {
             LiElementClasses = new string[] {"my-page-item"},
