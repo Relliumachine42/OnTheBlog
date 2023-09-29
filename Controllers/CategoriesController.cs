@@ -162,10 +162,18 @@ namespace OnTheBlog.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Categories'  is null.");
             }
             var category = await _context.Categories.FindAsync(id);
-            if (category != null)
+
+            if (category == null)
             {
-                _context.Categories.Remove(category);
+                return NotFound();
             }
+
+            foreach (BlogPost? blogPost in category.BlogPosts)
+            {
+                blogPost.Category = null;
+            }
+
+            _context.Categories.Remove(category);
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

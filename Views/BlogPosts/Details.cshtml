@@ -80,7 +80,7 @@
                         @Model.Abstract
                     </p>
                     <figure class="wp-block-image alignwide text-center">
-                        <img src="@_ImageService.ConvertByteArrayToFile(Model.ImageData,Model.ImageType,DefaultImage.BlogPostImage)" alt="Show the blog's Image here or a default Image" />
+                        <img height="300" src="@_ImageService.ConvertByteArrayToFile(Model.ImageData,Model.ImageType,DefaultImage.BlogPostImage)" alt="Show the blog's Image here or a default Image" />
                     </figure>
 
                     @Html.Raw(Model.Content)
@@ -168,7 +168,7 @@
 
                                                             <span class="">
                                                                 <span data-text="@comment.Author?.FullName">@comment.Author?.FullName</span>
-                                                            @if(User.IsInRole("Admin"))
+                                                            @if(User.IsInRole("Admin") || User.IsInRole("Moderator"))
                                                             {
                                                                 <a class="btn btn-sm btn-outline-danger"
                                                                    asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.Id">Delete</a>
