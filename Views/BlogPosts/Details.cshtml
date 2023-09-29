@@ -41,16 +41,16 @@
                                         <!-- Post Meta  -->
                                         <div class="post-meta-wrapper">
                                             <div class="post-meta">
-@*                                                 <div class="post-author-avatar border-rounded">
-                                                    <img src="" alt="Author Images" style="height:80px;width:80px">
+                                                @*                                                 <div class="post-author-avatar border-rounded">
+                                                <img src="" alt="Author Images" style="height:80px;width:80px">
                                                 </div> *@
                                                 <div class="content">
-@*                                                     <h6 class="post-author-name">
-                                                        <a class="hover-flip-item-wrapper" href="author.html">
-                                                            <span class="hover-flip-item">
-                                                                <span data-text="Glenn Schwartz"></span>
-                                                            </span>
-                                                        </a>
+                                                    @*                                                     <h6 class="post-author-name">
+                                                    <a class="hover-flip-item-wrapper" href="author.html">
+                                                    <span class="hover-flip-item">
+                                                    <span data-text="Glenn Schwartz"></span>
+                                                    </span>
+                                                    </a>
                                                     </h6> *@
                                                     <ul class="post-meta-list">
                                                         <li>@Model.Created.ToString("MMM dd, yyyy")</li>
@@ -80,7 +80,7 @@
                         @Model.Abstract
                     </p>
                     <figure class="wp-block-image alignwide text-center">
-                        <img height="300" src="@_ImageService.ConvertByteArrayToFile(Model.ImageData,Model.ImageType,DefaultImage.BlogPostImage)" alt="Show the blog's Image here or a default Image" />
+                        <img style="height:300px!important;" src="@_ImageService.ConvertByteArrayToFile(Model.ImageData,Model.ImageType,DefaultImage.BlogPostImage)" alt="Show the blog's Image here or a default Image" />
                     </figure>
 
                     @Html.Raw(Model.Content)
@@ -88,18 +88,18 @@
                     <div class="tagcloud">
                         @foreach (Tag tag in Model.Tags)
                         {
-                            <a href="#">@tag.Name</a>
+                            <a asp-action="TagFilter" asp-controller="BlogPosts" asp-route-tag="@tag.Name" class="inner">@tag.Name</a>
                         }
                     </div>
                     <div class="social-share-block">
                         @if (User.Identity!.IsAuthenticated)
                         {
-                        <div class="post-like">
-                            <a id="likesButton">
-                                <i id="faThumb" class="fal fa-thumbs-up" style="background-color:#ff993b;color:white;border-color:white"></i>
-                                <span id="numLikes">@Model.Likes.Where(bl => bl.IsLiked == true).Count() Likes</span>
-                            </a>
-                        </div>
+                            <div class="post-like">
+                                <a id="likesButton">
+                                    <i id="faThumb" class="fal fa-thumbs-up" style="background-color:#ff993b;color:white;border-color:white"></i>
+                                    <span id="numLikes">@Model.Likes.Where(bl => bl.IsLiked == true).Count() Likes</span>
+                                </a>
+                            </div>
                         }
                         <ul class="social-icon icon-rounded-transparent md-size">
                             <li><a href="https://github.com/Relliumachine42"><i class="fab fa-github"></i></a></li>
@@ -166,15 +166,15 @@
                                                 <div class="comment-inner">
                                                     <h6 class="commenter">
 
-                                                            <span class="">
-                                                                <span data-text="@comment.Author?.FullName">@comment.Author?.FullName</span>
-                                                            @if(User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                                                        <span class="">
+                                                            <span data-text="@comment.Author?.FullName">@comment.Author?.FullName</span>
+                                                            @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
                                                             {
                                                                 <a class="btn btn-sm btn-outline-danger"
                                                                    asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.Id">Delete</a>
                                                             }
-                                                            </span>
-                                                  
+                                                        </span>
+
                                                     </h6>
                                                     <div class="comment-meta">
                                                         <div class="time-spent">@comment.Created.ToString("MMM dd, yyyy")</div>
@@ -227,35 +227,35 @@
         $().ready(function () {
             $('#likesButton').click(function () {
 
-                    let args = {
-                        blogPostId: @Model.Id,
-                        blogUserId: userId
-                    };
+                let args = {
+                    blogPostId: @Model.Id,
+                    blogUserId: userId
+                };
 
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("LikeBlogPost","BlogPosts")',
-                        data: args,
-                        success: function (result) {
-                            let data = result.isLiked;
-                            let likes = result.count;
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("LikeBlogPost","BlogPosts")',
+                    data: args,
+                    success: function (result) {
+                        let data = result.isLiked;
+                        let likes = result.count;
 
-                            if (data == true) {
-                                $("#faThumb").css({ "background-color": "red", "color": "white", "border-color": "white" });
-                            } else {
-                                $("#faThumb").css({ "background-color": "", "color": "", "border-color": "" });
-                            }
-
-                            $('#numLikes').html(likes + ' Likes');
-                        },
-                        failure: function (result) {
-                            alert(result.d);
-                        },
-                        error: function (result) {
-                            alert(result.d);
+                        if (data == true) {
+                            $("#faThumb").css({ "background-color": "red", "color": "white", "border-color": "white" });
+                        } else {
+                            $("#faThumb").css({ "background-color": "", "color": "", "border-color": "" });
                         }
-                    });
-                
+
+                        $('#numLikes').html(likes + ' Likes');
+                    },
+                    failure: function (result) {
+                        alert(result.d);
+                    },
+                    error: function (result) {
+                        alert(result.d);
+                    }
+                });
+
             });
         });
 
