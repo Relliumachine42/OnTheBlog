@@ -269,7 +269,7 @@ namespace OnTheBlog.Controllers
 
         // GET: BlogPosts/Delete/5
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, string sourceView)
         {
             if (id == null || id == 0)
             {
@@ -287,12 +287,21 @@ namespace OnTheBlog.Controllers
 
             await _blogService.UpdateBlogPostAsync(blogPost);
 
-            return RedirectToAction(nameof(AuthorArea));
+
+            if (sourceView == "Details")
+            {
+                return RedirectToAction("Details", "BlogPosts", new { slug = blogPost.Slug });
+            }
+            else
+            {
+                 return RedirectToAction(nameof(AuthorArea));
+            }
+
         }
 
         // GET: BlogPosts/Undelete/5
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Undelete(int? id)
+        public async Task<IActionResult> Undelete(int? id, string sourceView)
         {
             if (id == null || id == 0)
             {
@@ -310,7 +319,14 @@ namespace OnTheBlog.Controllers
 
             await _blogService.UpdateBlogPostAsync(blogPost);
 
-            return RedirectToAction(nameof(AuthorArea));
+            if (sourceView == "Details")
+            {
+                return RedirectToAction("Details", "BlogPosts", new { slug = blogPost.Slug });
+            }
+            else
+            {
+                return RedirectToAction(nameof(AuthorArea));
+            }
         }
 
         private bool BlogPostExists(int id)
@@ -319,7 +335,7 @@ namespace OnTheBlog.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Publish(int? id)
+        public async Task<IActionResult> Publish(int? id, string sourceView)
         {
             if (id == null || id == 0)
             {
@@ -337,12 +353,18 @@ namespace OnTheBlog.Controllers
 
             await _blogService.UpdateBlogPostAsync(blogPost);
 
-            return RedirectToAction(nameof(AuthorArea));   
-
+            if (sourceView == "Details")
+            {
+                return RedirectToAction("Details", "BlogPosts", new { slug = blogPost.Slug });
+            }
+            else
+            {
+                return RedirectToAction(nameof(AuthorArea));
+            }
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Unpublish(int? id)
+        public async Task<IActionResult> Unpublish(int? id, string sourceView)
         {
             if (id == null || id == 0)
             {
@@ -360,7 +382,14 @@ namespace OnTheBlog.Controllers
 
             await _blogService.UpdateBlogPostAsync(blogPost);
 
-            return RedirectToAction(nameof(AuthorArea));
+            if (sourceView == "Details")
+            {
+                return RedirectToAction("Details", "BlogPosts", new { slug = blogPost.Slug });
+            }
+            else
+            {
+                return RedirectToAction(nameof(AuthorArea));
+            }
         }
     }
 }

@@ -18,24 +18,24 @@
                                     @if (Model.IsPublished == false)
                                     {
                                         <a class="w-75 btn btn-outline-success"
-                                           asp-action="Publish" asp-controller="BlogPosts" asp-route-id="@Model.Id">Publish</a>
+                                       asp-action="Publish" asp-controller="BlogPosts" asp-route-id="@Model.Id" asp-route-sourceView="Details">Publish</a>
                                     }
                                     else
                                     {
                                         <a class="w-75 btn btn-outline-success"
-                                           asp-action="Unpublish" asp-controller="BlogPosts" asp-route-id="@Model.Id">Unpublish</a>
+                                       asp-action="Unpublish" asp-controller="BlogPosts" asp-route-id="@Model.Id" asp-route-sourceView="Details">Unpublish</a>
                                     }
                                     <a class="w-75 btn btn-outline-warning"
-                                       asp-action="Edit" asp-controller="BlogPosts" asp-route-id="@Model.Id">Edit </a>
+                                   asp-action="Edit" asp-controller="BlogPosts" asp-route-id="@Model.Id" asp-route-sourceView="Details">Edit </a>
                                     @if (Model.IsDeleted == false)
                                     {
                                         <a class="w-75 btn btn-outline-danger"
-                                           asp-action="Delete" asp-controller="BlogPosts" asp-route-id="@Model.Id">Delete</a>
+                                           asp-action="Delete" asp-controller="BlogPosts" asp-route-id="@Model.Id" asp-route-sourceView="Details">Delete</a>
                                     }
                                     else
                                     {
                                         <a class="w-75 btn btn-outline-danger"
-                                           asp-action="Undelete" asp-controller="BlogPosts" asp-route-id="@Model.Id">Undelete</a>
+                                       asp-action="Undelete" asp-controller="BlogPosts" asp-route-id="@Model.Id" asp-route-sourceView="Details">Undelete</a>
                                     }
                                 </div>
        
