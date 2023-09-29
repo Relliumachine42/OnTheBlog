@@ -170,7 +170,12 @@ namespace OnTheBlog.Areas.Identity.Pages.Account
         {
             try
             {
-                return Activator.CreateInstance<BlogUser>();
+                BlogUser blogUser = Activator.CreateInstance<BlogUser>();
+
+                blogUser.FirstName = Input.FirstName;
+                blogUser.LastName = Input.LastName;
+
+                return blogUser;
             }
             catch
             {
