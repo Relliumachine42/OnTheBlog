@@ -62,8 +62,8 @@ namespace OnTheBlog.Controllers
             {
                 try
                 {
-                    string? adminEmail = _configuration["AdminLoginEmail"] ?? Environment.GetEnvironmentVariable("AdminLoginEmail");
-                    await _emailService.SendEmailAsync(adminEmail!, $"Contact Me Message From - {blogUser.FullName}", message!);
+                    string? contactEmail = _configuration["ContactMeEmail"] ?? Environment.GetEnvironmentVariable("ContactMeEmail");
+                    await _emailService.SendEmailAsync(contactEmail!, $"InTheBlogLight Contact - {blogUser.FullName} - {blogUser.Email}", message!);
                     swalMessage = "Email sent successfully!";
                 }
                 catch (Exception)
@@ -72,10 +72,13 @@ namespace OnTheBlog.Controllers
                     throw;
                 }
 
-                swalMessage = "Error: Unable to send email.";
 
+            } else
+            {
+
+                swalMessage = "Error: Unable to send email.";
             }
-            return RedirectToAction("Index", new { swalMessage });
+            return RedirectToAction("ContactMe", new { swalMessage });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
