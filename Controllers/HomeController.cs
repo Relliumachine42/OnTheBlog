@@ -38,8 +38,10 @@ namespace OnTheBlog.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> ContactMe()
+        public async Task<IActionResult> ContactMe(string? swalMessage = null)
         {
+            ViewData["SwalMessage"] = swalMessage;
+
             string? blogUserId = _userManager.GetUserId(User);
 
             if (blogUserId == null)
