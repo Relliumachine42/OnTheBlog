@@ -15,16 +15,16 @@ namespace OnTheBlog.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<BlogUser> _userManager;
         private readonly ApplicationDbContext _context;
-        private readonly IEmailSender _emailService;
         private readonly IConfiguration _configuration;
+        private readonly IEmailSender _emailService;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<BlogUser> userManager, ApplicationDbContext context, IEmailSender emailService, IConfiguration configuration)
+        public HomeController(ILogger<HomeController> logger, UserManager<BlogUser> userManager, ApplicationDbContext context, IConfiguration configuration, IEmailSender emailService)
         {
             _logger = logger;
             _userManager = userManager;
             _context = context;
-            _emailService = emailService;
             _configuration = configuration;
+            _emailService = emailService;
         }
 
         public IActionResult Index()
