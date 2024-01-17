@@ -17,14 +17,16 @@ namespace OnTheBlog.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IEmailSender _emailService;
+        private readonly IUserService _userService;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<BlogUser> userManager, ApplicationDbContext context, IConfiguration configuration, IEmailSender emailService)
+        public HomeController(ILogger<HomeController> logger, UserManager<BlogUser> userManager, ApplicationDbContext context, IConfiguration configuration, IEmailSender emailService, IUserService userService)
         {
             _logger = logger;
             _userManager = userManager;
             _context = context;
             _configuration = configuration;
             _emailService = emailService;
+            _userService = userService;
         }
 
         public IActionResult Index()
@@ -37,23 +39,18 @@ namespace OnTheBlog.Controllers
             return View();
         }
 
-        [Authorize]
         public async Task<IActionResult> ContactMe(string? swalMessage = null)
         {
             ViewData["SwalMessage"] = swalMessage;
 
             string? blogUserId = _userManager.GetUserId(User);
 
-            if (blogUserId == null)
-            {
-                return NotFound();
-            }
-
-            BlogUser? blogUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == blogUserId);
+            BlogUser? blogUser = await _userService.GetUserByIdAsync(blogUserId)
+                ?? new BlogUser();
 
             return View(blogUser);
         }
-        [Authorize]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ContactMe([Bind("FirstName,LastName,Email")] BlogUser blogUser, string? message)
@@ -67,18 +64,19 @@ namespace OnTheBlog.Controllers
                     string? contactEmail = _configuration["ContactMeEmail"] ?? Environment.GetEnvironmentVariable("ContactMeEmail");
                     await _emailService.SendEmailAsync(contactEmail!, $"InTheBlogLight Contact - {blogUser.FullName} - {blogUser.Email}", message!);
                     swalMessage = "Email sent successfully!";
+                    return RedirectToAction("Index", "BlogPosts", new { swalMessage });
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    swalMessage = "Error: Unable to send email.";
+                    return RedirectToAction(nameof(ContactMe), new { swalMessage });
                 }
 
 
             } else
             {
 
-                swalMessage = "Error: Unable to send email.";
+                swalMessage = "Error: All fields are required.";
             }
             return RedirectToAction("ContactMe", new { swalMessage });
         }

@@ -1138,7 +1138,7 @@ font-family: 'Red Hat Display', sans-serif;
 }
 
 .bg_contact {
-    background-image: url(~/img/background.jpg);
+    background-image: url('/img/background.jpg');
 }
 
 /* Height and width */

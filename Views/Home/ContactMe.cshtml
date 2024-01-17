@@ -28,6 +28,9 @@
                         <p class="">Email: glennschwartz42@gmail.com</p>
                     </div>
                     <!-- Start Contact Form  -->
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        
                     <div class="axil-section-gapTop axil-contact-form-area">
                         <h4 class="title mb--10">Send Us a Message</h4>
                         <p class="b3 mb--30">Your email address will not be published. All the fields are required.</p>
@@ -63,6 +66,20 @@
                             </div>
                         </form>
                     </div>
+                    }                   
+                    else
+                    {
+                    <div class="axil-total-comment-post">
+                        <div class="add-comment-button cerchio">
+                            <a class="axil-button button-rounded"
+                               asp-area="Identity"
+                               asp-page="/Account/Login"
+                               asp-route-returnUrl="@Url.Action("ContactMe", "Home")" tabindex="0">
+                                <span>Login to Send a Message</span>
+                            </a>
+                        </div>
+                    </div>
+                    }
                     <!-- End Contact Form  -->
                 </div>
                 <!-- End About Area  -->
