@@ -4,7 +4,10 @@
 @inject IBlogService _BlogService
 @inject UserManager<BlogUser> _userManager
 @{
+    string? slug = ViewBag.Slug;
+
     ViewData["ShowCode"] = true;
+    ViewData["Title"] = slug;
 }
 
 <style>
@@ -28,7 +31,7 @@
                                     <div class="post-content">
                                         <div class="post-cat">
                                             <div class="post-cat-list">
-                                                <a class="hover-flip-item-wrapper" href="#">
+                                                <a asp-action="CategoryFilter" asp-controller="BlogPosts" asp-route-category="@Model.Category?.Name" class="hover-flip-item-wrapper">
                                                     <span class="hover-flip-item">
                                                         <span data-text="@Model.Category?.Name">@Model.Category?.Name</span>
                                                     </span>

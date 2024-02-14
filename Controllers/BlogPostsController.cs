@@ -90,7 +90,7 @@ namespace OnTheBlog.Controllers
             IPagedList<BlogPost> blogPosts = await _blogService.GetBlogPostsByFilter(filter).ToPagedListAsync(page, pageSize);
 
             ViewData["ActionName"] = nameof(BlogFilter);
-            ViewData["CategoryString"] = filter;
+            ViewData["FilterString"] = filter;
 
             return View(nameof(AuthorArea), blogPosts);
         }
@@ -138,6 +138,8 @@ namespace OnTheBlog.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["Slug"] = slug;
 
             return View(blogPost);
         }

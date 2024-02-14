@@ -2,10 +2,10 @@
 @model IPagedList<OnTheBlog.Models.BlogPost>
 @inject IImageService _ImageService
 @{
-    ViewData["Title"] = "Index";
     string? searchString = ViewBag.SearchString;
     string? actionName = ViewBag.ActionName;
-    string? category = ViewBag.Category;
+    string? category = ViewBag.CategoryString;
+    string? tag = ViewBag.TagString;
 
     string pageTitle = "";
 
@@ -20,8 +20,15 @@
         case "Popular":
             pageTitle = "Most Popular Posts";
             break;
+        case "TagFilter":
+            pageTitle = $"{tag}";
+            break;
+        case "CategoryFilter":
+            pageTitle = $"{category}";
+            break;
     }
     ViewData["ShowCode"] = false;
+    ViewData["Title"] = pageTitle;
 }
 
 
@@ -82,9 +89,6 @@
         </div>
     </div>
 
-    @*    <!-- Start Instagram Area  -->
-    <partial name="_InstaPartial" />
-    <!-- End Instagram Area  -->*@
 
 </div>
 <!-- End Post List Wrapper  -->
